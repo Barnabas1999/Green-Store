@@ -202,36 +202,7 @@ function askAssistant(){
     if(currentDetail){ans=`📦 <b>${currentDetail.name}</b><br>Price #${Number(currentDetail.price).toLocaleString()}<br>Category ${currentDetail.category}<br>Desc: ${currentDetail.description||'GS quality'}<br>Wallet ${wallet>=currentDetail.price?'✅ Can afford':'❌ Need more'}`;}else{ans=`📦 Tap product card to see details + more images gallery!`;}
   }else if(qLower.includes('hello')||qLower.includes('hi')){
     ans=`👋 Hello ${user?user.email.split('@')[0]:'Friend'}! Wallet #${wallet.toLocaleString()}, Cart ${count} items, ${products.length} products. Ask: What should I buy?`;
-  }else{
-    ans=`🤖 Based on YOUR data: Wallet #${wallet.toLocaleString()}, Cart ${count} items #${total.toLocaleString()}, Products ${products.length}<br><br>For "${q}": GS delivers all Africa, wallet only, tap product for details & more images. What you want? Buy? Fund? Track?`;
-  }
-  box.innerHTML+=`<div class="chat-bubble bot-bubble">${ans}</div>`;box.scrollTop=box.scrollHeight;
-}
-  quickAsk(t){chatInput.value=t; askAssistant();
-}
-function askAssistant(){
-  const q=chatInput.value.trim().toLowerCase(); if(!q) return;
-  const chatBoxEl=document.getElementById('chatBox');
-  chatBoxEl.innerHTML+=`<div class="chat-bubble user-bubble">${chatInput.value
-    }</div>`;
-  let answer="";
-  if(q.includes('kitchen')){const items=products.filter(p=>p.category.toLowerCase().includes('kitchen')); answer=items.length?`🍳 Kitchen items found: ${items.map(i=>`${i.name
-            } (#${i.price
-            }function)`).join(', ')
-        }`: "🍳 No kitchen items yet - Add pots, blenders in admin > Kitchen screen";
-    }
-  else if(q.includes('food')){const items=products.filter(p=>p.category.toLowerCase().includes('food')); answer=items.length?`🍱 Food delivery: ${items.map(i=>`${i.name
-            } (#${i.price
-            })`).join(', ')
-        } - We deliver in PH!`: "🍱 No food items yet - Add Jollof, chicken in admin > Food delivery screen";
-    }
-  else if(q.includes('wallet')||q.includes('balance')){answer=`💰 Your wallet balance is #${wallet.toLocaleString()
-        }. To fund: Go to Wallet > Tap Deposit > Transfer to PalmPay 9122857147`;
-    }
-  else if(q.includes('order')||q.includes('waybill')||q.includes('rider')||q.includes('track')){answer=`📦 Your orders: Go to Orders tab to see Waybill + Rider tracking. Each order has real rider name, phone, pickup date. Admin updates it.`;
-    }
-  else if(q.includes('password')||q.includes('blind')){answer=`👁️ Password: In Login screen, tap the eye icon to show/hide password (blind mode).`;
-    }
+  
   else {const found=products.filter(p=>p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)).slice(0,
         5); if(found.length){answer=`🔍 Found ${found.length
             } items for "${q}":\n`+found.map(f=>`• ${f.name
@@ -245,11 +216,9 @@ function askAssistant(){
             "wallet", or check Categories. I am learning from your ${products.length
             } products.`;
         }
-    }
-  chatBoxEl.innerHTML+=`<div class="chat-bubble bot-bubble">${answer.replace(/\n/g,'<br>')
-    }</div>`;
-  chatInput.value=''; chatBoxEl.scrollTop=chatBoxEl.scrollHeight;
-}
+  }else{
+    ans=`🤖 Based on YOUR data: Wallet #${wallet.toLocaleString()}, Cart ${count} items #${total.toLocaleString()}, Products ${products.length}<br><br>For "${q}": GS delivers all Africa, wallet only, tap product for details & more images. What you want? Buy? Fund? Track?`;
+  }
 function logout(){supabase.auth.signOut();user=null;authBtn.innerHTML='Login';wallet=500;updateUI();document.getElementById('secretAdminBtn').style.display='none';}
 window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splash').classList.add('hide');},1500);const savedTheme=localStorage.getItem('gs_theme');if(savedTheme){setTheme(savedTheme);}else{setTheme('greenBlackGold');}try{const s=JSON.parse(localStorage.getItem('gs_settings'));if(s)settings={...settings,...s};}catch(e){}changeFont(settings.font);});
 initCats();loadProducts();
