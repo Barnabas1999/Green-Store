@@ -1,111 +1,225 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GREEN STORE - WORKING</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#060d07">
+<title>WELCOME TO GREEN STORE - GS SMART CART</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;600;400&family=Orbitron:wght@800;900&display=swap" rel="stylesheet">
 <style>
-body{background:#060d07;color:#fff;font-family:sans-serif;margin:0;padding:0}
-header{background:#0c1f0f;padding:12px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #1a3d1f;position:sticky;top:0;z-index:10}
-.btn{border:none;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer}.btn-gold{background:#C6A86F;color:#000}.btn-dark{background:#0c1f0f;color:#fff;border:1px solid #1a3d1f}
-.products{padding:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding-bottom:80px}
-.card{background:#0c1f0f;border:1px solid #1a3d1f;border-radius:16px;overflow:hidden}
-.card-img{height:130px;background:#0a1a0c;display:flex;align-items:center;justify-content:center}.card-img img{width:100%;height:100%;object-fit:cover}
-.card-body{padding:8px}.price{color:#C6A86F;font-weight:800}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;z-index:100;padding:12px}.modal-box{background:#0c1f0f;border:1px solid #1a3d1f;border-radius:16px;padding:14px;width:100%;max-width:500px}
-input,select,textarea{width:100%;padding:10px;background:#0a1a0c;border:1px solid #1a3d1f;border-radius:10px;color:#fff;margin:4px 0}
-.cart-item{border:1px solid #1a3d1f;border-radius:10px;padding:8px;margin:5px 0;background:#0a1a0c;display:flex;gap:8px;align-items:center}
+:root{--gold:#C6A86F;--green:#22c55e;--bg:#060d07;--card:#0c1f0f;--text:#fff;--border:#1a3d1f;--input:#0a1a0c;--red:#ff4444}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;overflow-x:hidden;transition:background .4s}
+#splash{position:fixed;inset:0;background:radial-gradient(circle at center,var(--card) 0%,var(--bg) 100%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,visibility .8s}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.gs-logo{width:125px;height:125px;border-radius:50%;background:conic-gradient(from 0deg,#C6A86F,#f3e5c0,#8a7350,#C6A86F);display:flex;align-items:center;justify-content:center;font-family:Orbitron,sans-serif;font-size:52px;font-weight:900;color:#000;border:4px solid var(--green);box-shadow:0 0 0 6px rgba(198,168,111,.2),0 0 60px rgba(34,197,94,.6),0 0 90px rgba(198,168,111,.5),inset 0 3px 15px rgba(255,255,255,.6);position:relative;animation:gsPulse 1.5s infinite}
+.gs-logo::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px dashed var(--gold);animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes gsPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:10px 4%;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gs-mini{width:42px;height:42px;border-radius:50%;background:conic-gradient(from 0deg,#C6A86F,#f3e5c0,#8a7350,#C6A86F);display:flex;align-items:center;justify-content:center;font-family:Orbitron,sans-serif;font-weight:900;color:#000;font-size:17px;border:2px solid var(--green);box-shadow:0 0 15px rgba(34,197,94,.5)}
+.welcome-text{font-weight:800;font-size:12px;letter-spacing:.8px;line-height:1.1}.welcome-text span{display:block;font-size:9px;color:var(--gold);letter-spacing:2.5px}
+.search{flex:1;min-width:130px;background:var(--input);border:1px solid var(--border);border-radius:999px;padding:11px 16px;color:var(--text);outline:none;font-size:13px}
+.btn{border:none;border-radius:999px;padding:10px 14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;justify-content:center;font-size:12px}.btn-gold{background:linear-gradient(145deg,var(--gold),#8a7350);color:#000}.btn-dark{background:var(--card);color:var(--text);border:1px solid var(--border)}.btn-red{background:var(--red);color:#fff}
+.products{padding:10px 4% 110px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden}.card-img{height:160px;background:var(--input);display:flex;align-items:center;justify-content:center;overflow:hidden}.card-img img{width:100%;height:100%;object-fit:cover}.card-body{padding:10px}.price{color:var(--gold);font-weight:800;margin-top:4px;font-size:13px}
+.grid-cats{padding:10px 4%;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}.cat{background:var(--card);border:1px solid var(--border);padding:8px 14px;border-radius:999px;font-size:11px;cursor:pointer;white-space:nowrap}.cat.active{background:var(--gold);color:#000}
+.bottom-nav{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:999px;display:flex;padding:5px;z-index:200;gap:2px}.bottom-nav button{background:transparent;color:#6a8a70;border:none;padding:8px 12px;border-radius:999px;cursor:pointer;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px}.bottom-nav button i{font-size:18px}.bottom-nav button.active{background:var(--gold);color:#000}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:flex-start;justify-content:center;z-index:300;padding:14px;overflow-y:auto}.modal-box{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:16px;width:100%;max-width:700px;margin:20px auto}
+input,select,textarea{width:100%;padding:12px;background:var(--input);border:1px solid var(--border);border-radius:12px;color:var(--text);margin:5px 0;outline:none;font-size:13px}
+.password-wrap{position:relative;display:flex;align-items:center}.password-wrap input{padding-right:40px}.eye{position:absolute;right:12px;cursor:pointer;font-size:20px;color:#6a8a70}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.theme-dot{width:40px;height:40px;border-radius:50%;border:3px solid var(--border);cursor:pointer;display:inline-block;margin:4px;transition:.2s}.theme-dot.active{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold),0 0 20px var(--gold);transform:scale(1.1)}.theme-label{font-size:8px;text-align:center;margin-top:2px;font-weight:600}
+.scroll-box{max-height:60vh;overflow-y:auto}
+.cart-item{border:1px solid var(--border);border-radius:14px;padding:10px;margin:6px 0;background:var(--input);display:flex;gap:10px;align-items:center}
+.cart-item-info{flex:1}.qty-btn{background:var(--card);border:1px solid var(--border);width:28px;height:28px;border-radius:50%;color:var(--text);cursor:pointer;font-weight:800}
+.form-section{background:var(--input);border:1px solid var(--border);border-radius:14px;padding:12px;margin:8px 0}.form-title{font-size:11px;font-weight:800;color:var(--gold);margin-bottom:6px}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-<header>
-<b style="color:#C6A86F">GS GREEN STORE</b>
-<input id="searchBar" placeholder="Search..." style="flex:1;padding:8px;border-radius:999px;border:1px solid #1a3d1f;background:#0a1a0c;color:#fff" oninput="doSearch(this.value)">
-<button class="btn btn-dark" onclick="document.getElementById('walletModal').style.display='flex'">Wallet <span id="walletBal">#500</span></button>
-<button class="btn btn-gold" onclick="openCart()"><i class="ri-shopping-cart-line"></i> <span id="cartCount">0</span></button>
-<button class="btn btn-dark" id="authBtn" onclick="document.getElementById('authModal').style.display='flex'">Login</button>
-</header>
+<div id="splash"><div class="gs-logo">GS</div><div style="margin-top:20px;font-weight:800;letter-spacing:3px;font-size:14px;color:var(--gold);font-family:Orbitron">WELCOME TO GREEN STORE</div><div style="font-size:10px;color:var(--green);margin-top:6px;letter-spacing:2px;font-weight:800">SMART CART - AFRICA'S #1</div></div>
+<header><div style="display:flex;align-items:center;gap:10px"><div class="gs-mini">GS</div><div class="welcome-text">WELCOME TO GREEN STORE <span>GS • AFRICA STORE</span></div></div><input id="searchBar" class="search" placeholder="Search Africa..." oninput="doSearch(this.value)"><button class="btn btn-dark" onclick="openModal('walletModal')"><i class="ri-wallet-3-line"></i> <span id="walletBal">#500</span></button><button class="btn btn-dark" id="authBtn" onclick="openModal('authModal')"><i class="ri-user-line"></i> Login</button><button class="btn btn-gold" onclick="openModal('cartModal')"><i class="ri-shopping-cart-line"></i> <span id="cartCount">0</span></button></header>
+<div class="grid-cats" id="catList"></div><div class="products" id="productGrid"></div>
+<div class="bottom-nav"><button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="ri-home-5-fill"></i>Home</button><button onclick="openModal('catModal')"><i class="ri-apps-2-line"></i>Cat</button><button onclick="openModal('historyModal');loadHistory()"><i class="ri-file-list-3-line"></i>Orders</button><button onclick="openModal('assistantModal')"><i class="ri-robot-2-line"></i>Robot</button><button onclick="openModal('settingsModal')"><i class="ri-settings-3-line"></i>Set</button></div>
 
-<div id="productGrid" class="products"><p style="grid-column:1/-1;text-align:center;padding:30px">Loading Africa store... If not loading, check internet</p></div>
+<div id="authModal" class="modal"><div class="modal-box"><h3>Login - Africa</h3><input id="email" placeholder="Email"><div class="password-wrap"><input id="password" type="password" placeholder="Password"><span class="eye" onclick="togglePass()"><i class="ri-eye-off-line" id="eyeIcon"></i></span></div><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="login()">Login</button><button class="btn btn-dark" style="width:100%;margin-top:6px" onclick="signup()">Signup + #500</button><div id="authMsg" style="font-size:11px;color:var(--gold)"></div><button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="closeModals()">Close</button></div></div>
+<div id="walletModal" class="modal"><div class="modal-box"><h3>Wallet Africa - <span id="walletBal2">#500</span></h3><button id="depositBtn" class="btn btn-gold" style="width:100%;margin-top:10px" onclick="showDepositAccount()">TAP TO DEPOSIT - WALLET ONLY</button><div id="accountDetails" style="display:none;background:var(--input);border:1px dashed var(--gold);border-radius:14px;padding:12px;margin-top:10px"><h2 style="color:var(--gold)">9122857147</h2><p style="font-size:12px">PalmPay - Barnabas Paul</p></div><div id="fundForm" style="display:none;margin-top:10px"><input id="fundAmount" type="number" placeholder="Amount"><input id="fundRef" placeholder="Ref"><button class="btn btn-gold" style="width:100%" onclick="submitFunding()">I HAVE PAID</button></div><div id="fundsList" class="scroll-box" style="font-size:11px;margin-top:10px"></div><button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="closeModals()">Close</button></div></div>
 
-<!-- CART - WILL OPEN -->
-<div id="cartModal" class="modal"><div class="modal-box">
-<h3>Cart - Selected Items</h3>
-<div id="cartItems" style="max-height:35vh;overflow:auto"></div>
-<div style="margin-top:10px;border:2px solid #C6A86F;border-radius:10px;padding:10px;display:flex;justify-content:space-between">
-<div>TOTAL <b id="cartTotal" style="color:#C6A86F">#0</b></div>
-<div>Items <b id="cartTotalItems">0</b> | Wallet <b id="cartWallet">#500</b></div>
+<!-- STEP 1: CART VIEW - SEE SELECTED ITEMS WITH PRICE AND TOTAL + DELETE/EDIT -->
+<div id="cartModal" class="modal"><div class="modal-box"><h3><i class="ri-shopping-cart-2-fill"></i> Cart - Selected Items</h3>
+<p style="font-size:10px;color:#6a8a70;margin:6px 0">Tap + / - to edit qty, Tap delete to remove. Then tap ORDER button to fill form & pay.</p>
+<div id="cartItems" class="scroll-box" style="max-height:45vh;min-height:10vh"></div>
+<div style="background:var(--input);border:2px solid var(--gold);border-radius:14px;padding:12px;margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+<div><div style="font-size:10px;color:#6a8a70">TOTAL</div><b id="cartTotal" style="font-size:20px;color:var(--gold)">#0</b><div style="font-size:10px">Wallet: <b id="cartWallet" style="color:var(--green)">#500</b></div></div>
+<div style="text-align:right"><div style="font-size:10px;color:#6a8a70">Items: <b id="cartTotalItems">0</b></div><button class="btn btn-dark" style="font-size:10px;margin-top:4px" onclick="clearCart()"><i class="ri-delete-bin-line"></i> Clear All</button></div>
 </div>
-<button class="btn btn-gold" style="width:100%;margin-top:10px;padding:12px" onclick="openCheckout()">ORDER NOW - FILL FORM & PAY WALLET</button>
-<button class="btn btn-dark" style="width:100%;margin-top:6px" onclick="closeAll()">Continue Shopping</button>
+<button class="btn btn-gold" style="width:100%;margin-top:14px;padding:16px;font-size:15px;font-weight:800" onclick="goToCheckout()"><i class="ri-secure-payment-fill"></i> ORDER NOW - FILL FORM & PAY WITH WALLET <i class="ri-arrow-right-line"></i></button>
+<button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="closeModals()"><i class="ri-shopping-bag-line"></i> Continue Shopping</button>
 </div></div>
 
-<!-- CHECKOUT FORM -->
-<div id="checkoutModal" class="modal"><div class="modal-box">
-<h3>Order Form - Wallet Only</h3>
-<p>Total: <b id="checkoutTotal" style="color:#C6A86F">#0</b></p>
-<input id="cFullName" placeholder="Full Name *">
-<input id="cPhone" placeholder="Phone *">
-<input id="cEmail" placeholder="Email *">
-<input id="deliveryAddr" placeholder="Street Address *">
-<div style="display:flex;gap:6px"><input id="cCity" placeholder="City *" style="flex:1"><input id="cState" placeholder="State *" style="flex:1"></div>
-<select id="cCountry"><option value="">Country *</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>Other Africa</option></select>
-<textarea id="cNote" placeholder="Note"></textarea>
-<button class="btn btn-gold" style="width:100%;padding:12px;margin-top:8px" onclick="placeOrder()">CONFIRM & PAY - WALLET ONLY</button>
-<button class="btn btn-dark" style="width:100%;margin-top:6px" onclick="backToCart()">Back to Cart</button>
+<!-- STEP 2: ORDER FORM - ONLY WHEN USER TAP ORDER BUTTON INSIDE CART -->
+<div id="checkoutModal" class="modal"><div class="modal-box"><h3><i class="ri-file-list-3-fill"></i> Order Form - Fill & Pay with Wallet</h3>
+<div style="background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px;margin:8px 0;display:flex;justify-content:space-between"><span style="font-size:12px">Order Total:</span><b id="checkoutTotal" style="color:var(--gold)">#0</b></div>
+<div class="form-section"><div class="form-title"><i class="ri-user-3-fill"></i> CUSTOMER DETAILS *</div><input id="cFullName" placeholder="Full Name *"><input id="cPhone" placeholder="Phone Number * +234..."><input id="cEmail" placeholder="Email *"></div>
+<div class="form-section"><div class="form-title"><i class="ri-map-pin-fill"></i> DELIVERY ADDRESS - AFRICA *</div><input id="deliveryAddr" placeholder="Street Address *"><div style="display:flex;gap:6px"><input id="cCity" placeholder="City *" style="flex:1"><input id="cState" placeholder="State *" style="flex:1"></div><div style="display:flex;gap:6px"><select id="cCountry" style="flex:1"><option value="">Select Country *</option><option>Nigeria</option><option>Ghana</option><option>Kenya</option><option>South Africa</option><option>Uganda</option><option>Tanzania</option><option>Cameroon</option><option>Other Africa</option></select><input id="cZip" placeholder="Zip" style="flex:1"></div><textarea id="cNote" placeholder="Landmark / Note (optional)" rows="2"></textarea></div>
+<div class="form-section"><div class="form-title"><i class="ri-wallet-3-fill"></i> WALLET PAYMENT ONLY</div><div style="background:var(--card);border:1px solid var(--gold);border-radius:10px;padding:12px;text-align:center"><i class="ri-wallet-3-fill" style="font-size:28px;color:var(--gold)"></i><p style="font-weight:800;color:var(--gold);margin-top:4px">PAY WITH WALLET ONLY</p><p style="font-size:10px;color:#6a8a70">Wallet: <span id="checkoutWallet" style="color:var(--gold);font-weight:800">#500</span> | Total: <span id="checkoutTotal2" style="color:var(--green)">#0</span></p></div></div>
+<button class="btn btn-gold" style="width:100%;margin-top:10px;padding:16px;font-size:15px" onclick="placeOrder()"><i class="ri-lock-2-fill"></i> CONFIRM & PAY - GENERATE WAYBILL</button>
+<button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="backToCart()"><i class="ri-arrow-left-line"></i> Back to Cart</button>
 </div></div>
 
-<div id="authModal" class="modal"><div class="modal-box"><h3>Login</h3><input id="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="login()">Login</button><button class="btn btn-dark" style="width:100%;margin-top:6px" onclick="signup()">Signup + #500</button><div id="authMsg" style="font-size:11px;color:#C6A86F"></div><button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="closeAll()">Close</button></div></div>
-<div id="walletModal" class="modal"><div class="modal-box"><h3>Wallet <span id="walletBal2">#500</span></h3><p style="font-size:12px">PalmPay: <b style="color:#C6A86F">9122857147</b> - Barnabas Paul</p><input id="fundAmount" type="number" placeholder="Amount"><input id="fundRef" placeholder="Ref"><button class="btn btn-gold" style="width:100%" onclick="submitFunding()">I HAVE PAID</button><div id="fundsList" style="font-size:11px;margin-top:8px"></div><button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="closeAll()">Close</button></div></div>
-<div id="adminModal" class="modal"><div class="modal-box"><h3>Admin - Add Product</h3><input id="pname" placeholder="Name"><input id="pprice" type="number" placeholder="Price"><input id="pcat" placeholder="Category e.g Kitchen screen"><input id="pimage" placeholder="Image URL"><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="addProduct()">ADD</button><div id="adminFunds" style="max-height:20vh;overflow:auto;margin-top:8px"></div><button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="closeAll()">Close</button></div></div>
+<div id="catModal" class="modal"><div class="modal-box"><h3>Categories</h3><div id="allCats" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div><button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="closeModals()">Close</button></div></div>
+<div id="historyModal" class="modal"><div class="modal-box"><h3>My Orders - Africa</h3><div id="historyList" class="scroll-box"></div><button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="closeModals()">Close</button></div></div>
+<div id="assistantModal" class="modal"><div class="modal-box"><h3>GS Robot - Africa</h3><div id="chatBox" style="background:var(--input);padding:10px;height:260px;overflow:auto;border-radius:12px;display:flex;flex-direction:column"><div style="padding:8px;background:var(--input);border:1px solid var(--border);border-radius:10px;font-size:12px">🛒 New Smart Cart: Tap cart → See items with price/total → Edit qty / Delete → Tap ORDER button → Fill form & pay wallet!</div></div><div style="display:flex;gap:6px;margin-top:8px"><input id="chatInput" placeholder="Ask..." style="flex:1"><button class="btn btn-gold" onclick="askAssistant()">Send</button></div><button class="btn btn-dark" style="width:100%;margin-top:8px" onclick="closeModals()">Close</button></div></div>
+
+<div id="settingsModal" class="modal"><div class="modal-box"><h3><i class="ri-settings-3-fill"></i> Settings - 6 Themes + GS Logo</h3>
+<div style="margin-top:12px">
+<div style="background:var(--input);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px">
+<div class="form-title"><i class="ri-palette-fill"></i> CHOOSE THEME - 6 OPTIONS</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
+<div style="text-align:center"><div class="theme-dot" id="dot-blackGold" style="background:#050a06" onclick="setTheme('blackGold')"></div><div class="theme-label">Black+Gold</div></div>
+<div style="text-align:center"><div class="theme-dot active" id="dot-greenBlackGold" style="background:conic-gradient(#060d07,#0c1f0f,#C6A86F,#22c55e)" onclick="setTheme('greenBlackGold')"></div><div class="theme-label">Green+Black+Gold<br><b style="color:var(--green)">DEFAULT</b></div></div>
+<div style="text-align:center"><div class="theme-dot" id="dot-whiteGold" style="background:#fff" onclick="setTheme('whiteGold')"></div><div class="theme-label">White+Gold</div></div>
+<div style="text-align:center"><div class="theme-dot" id="dot-blackGreen" style="background:#040a05" onclick="setTheme('blackGreen')"></div><div class="theme-label">Black+Green</div></div>
+<div style="text-align:center"><div class="theme-dot" id="dot-lightGreen" style="background:#e8f5e9" onclick="setTheme('lightGreen')"></div><div class="theme-label">Light+Green</div></div>
+<div style="text-align:center"><div class="theme-dot" id="dot-lightGreenGold" style="background:linear-gradient(145deg,#f8fdf8,#e8f5e9,#C6A86F)" onclick="setTheme('lightGreenGold')"></div><div class="theme-label">Light+Green+Gold</div></div>
+</div>
+</div>
+<div class="setting-row"><span><i class="ri-shopping-cart-fill"></i> Cart System</span><span style="color:var(--green)">Smart Edit/Delete ✅</span></div>
+<div class="setting-row"><span><i class="ri-wallet-3-fill"></i> Payment</span><span style="color:var(--gold);font-weight:800">Wallet Only 🔒</span></div>
+<div class="setting-row"><span><i class="ri-map-pin-line"></i> Delivery</span><span style="color:var(--green)">All Africa 🌍</span></div>
+<div class="setting-row"><span><i class="ri-information-line"></i> About</span><span style="font-size:10px">GS AFRICA v7.0 SMART CART</span></div>
+</div>
+<button class="btn btn-dark" style="width:100%;margin-top:10px;display:none" id="secretAdminBtn" onclick="openModal('adminModal')"><i class="ri-shield-keyhole-fill"></i> Secret Admin</button><button class="btn btn-dark" style="width:100%;margin-top:6px" onclick="logout()">Logout</button><button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="closeModals()">Close</button></div></div>
+
+<div id="adminModal" class="modal"><div class="modal-box"><h3>SECRET ADMIN - GS AFRICA SMART CART</h3><input id="pname" placeholder="Product name"><select id="pcat"></select><input id="pprice" type="number" placeholder="Price"><p style="font-size:10px;color:#6a8a70">Upload from phone:</p><input type="file" id="pfile" accept="image/*"><input id="pimage" placeholder="Or Image URL"><textarea id="pdesc" placeholder="Description"></textarea><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="addProduct()">ADD TO AFRICA STORE</button><hr style="margin:12px 0"><h4>Orders - Wallet Only</h4><div id="adminOrders" class="scroll-box" style="max-height:25vh"></div><input id="waybillInput" placeholder="Waybill"><input id="riderName" placeholder="Rider Name"><input id="riderPhone" placeholder="Rider Phone"><input id="pickupDate" type="date"><select id="trackingStatus"><option>Order Confirmed - Wallet Paid</option><option>Packed</option><option>Picked up</option><option>On the way - Africa</option><option>Delivered - Africa</option></select><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="updateTracking()">Update Tracking</button><hr style="margin:12px 0"><h4>PalmPay Approve</h4><div id="adminFunds" class="scroll-box"></div><button class="btn btn-dark" style="width:100%;margin-top:10px" onclick="closeModals()">Close Admin</button></div></div>
 
 <script>
 const supabase=window.supabase.createClient('https://lmlivfvwhjkfxiukdrlm.supabase.co','sb_publishable_8Lhp0kpFsJM6Wrq_ZxKwgQ_YDrxBUaE');
-let cart=[],products=[],user=null,wallet=500;const ADMIN_EMAIL="barnabaspaul43@gmail.com";
+const CATS=["tablets","iPad","phone screen","Home appliances screen","Electronic devices screen","Fashion men screen","Women fashion screen","Kids screen","Medical equipment screen","Electrical power screen","Customatic screen","Car,bike,bicycles screen","Engineering equipment screen","Kitchen screen","Food delivery screen","Food & groceries screen"];
+let cart=[],products=[],user=null,wallet=500,selectedOrderId=null;const ADMIN_EMAIL="barnabaspaul43@gmail.com";
+function getCached(){const c=localStorage.getItem('gs_products_cache');if(!c)return null;const {data,time}=JSON.parse(c);if(Date.now()-time<300000)return data;return null;}
+function setCached(d){localStorage.setItem('gs_products_cache',JSON.stringify({data:d,time:Date.now()}));}
+function setTheme(t){
+  const r=document.documentElement;
+  document.querySelectorAll('.theme-dot').forEach(d=>d.classList.remove('active'));
+  const dot=document.getElementById('dot-'+t); if(dot) dot.classList.add('active');
+  if(t==='blackGold'){r.style.setProperty('--bg','#050a06');r.style.setProperty('--card','#0f1a12');r.style.setProperty('--gold','#C6A86F');r.style.setProperty('--green','#C6A86F');r.style.setProperty('--text','#fff');r.style.setProperty('--border','#1e3322');r.style.setProperty('--input','#09110a');}
+  if(t==='greenBlackGold'){r.style.setProperty('--bg','#060d07');r.style.setProperty('--card','#0c1f0f');r.style.setProperty('--gold','#C6A86F');r.style.setProperty('--green','#22c55e');r.style.setProperty('--text','#fff');r.style.setProperty('--border','#1a3d1f');r.style.setProperty('--input','#0a1a0c');}
+  if(t==='whiteGold'){r.style.setProperty('--bg','#ffffff');r.style.setProperty('--card','#fff9ec');r.style.setProperty('--gold','#C6A86F');r.style.setProperty('--green','#C6A86F');r.style.setProperty('--text','#111');r.style.setProperty('--border','#e8d9b5');r.style.setProperty('--input','#fffaf0');}
+  if(t==='blackGreen'){r.style.setProperty('--bg','#040a05');r.style.setProperty('--card','#0a1a0f');r.style.setProperty('--gold','#22c55e');r.style.setProperty('--green','#22c55e');r.style.setProperty('--text','#fff');r.style.setProperty('--border','#143d1f');r.style.setProperty('--input','#08120a');}
+  if(t==='lightGreen'){r.style.setProperty('--bg','#f1f8f1');r.style.setProperty('--card','#ffffff');r.style.setProperty('--gold','#22c55e');r.style.setProperty('--green','#22c55e');r.style.setProperty('--text','#0a1a0f');r.style.setProperty('--border','#b7e4b7');r.style.setProperty('--input','#e8f5e9');}
+  if(t==='lightGreenGold'){r.style.setProperty('--bg','#f8fdf8');r.style.setProperty('--card','#ffffff');r.style.setProperty('--gold','#C6A86F');r.style.setProperty('--green','#22c55e');r.style.setProperty('--text','#0a1a0f');r.style.setProperty('--border','#c8e6c9');r.style.setProperty('--input','#f1f8e9');}
+  localStorage.setItem('gs_theme',t);
+}
+function togglePass(){const p=document.getElementById('password');const eye=document.getElementById('eyeIcon');if(p.type==='password'){p.type='text';eye.className='ri-eye-line';}else{p.type='password';eye.className='ri-eye-off-line';}}
+function initCats(){catList.innerHTML=CATS.map((c,i)=>`<div class="cat ${i==0?'active':''}" onclick="filterCat(this,'${c}')">${c}</div>`).join('');pcat.innerHTML=CATS.map(c=>`<option>${c}</option>`).join('');allCats.innerHTML=CATS.map(c=>`<button class="btn btn-dark" style="margin:4px" onclick="filterCat(null,'${c}');closeModals()">${c}</button>`).join('');}
+async function loadProducts(f=""){let cached=getCached();if(cached&&!f){products=cached;renderProducts();return;}let q=supabase.from('products').select('*').order('created_at',{ascending:false}).limit(100);if(f)q=q.ilike('category',`%${f}%`);const {data}=await q;products=data||[];if(!f&&data)setCached(products);renderProducts();}
+function renderProducts(){if(products.length==0){productGrid.innerHTML='<p style="grid-column:1/-1;text-align:center;padding:20px;color:#6a8a70">Welcome to Africa!</p>';return;}productGrid.innerHTML=products.map(p=>`<div class="card"><div class="card-img">${p.image?`<img src="${p.image}" loading="lazy">`:`<i class="ri-image-line"></i>`}</div><div class="card-body"><b style="font-size:12px">${p.name}</b><div style="font-size:10px;color:#6a8a70">${p.category}</div><div class="price">#${Number(p.price).toLocaleString()}</div><button class="btn btn-gold" style="width:100%;margin-top:6px;font-size:11px" onclick="addCart('${p.name.replace(/'/g,"")}','${p.price}','${p.image||''}')"><i class="ri-shopping-cart-2-fill"></i> Add</button></div></div>`).join('');}
+function doSearch(v){productGrid.innerHTML=products.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())||p.category.toLowerCase().includes(v.toLowerCase())).map(p=>`<div class="card"><div class="card-img">${p.image?`<img src="${p.image}">`:'No'}</div><div class="card-body"><b>${p.name}</b><div class="price">#${Number(p.price).toLocaleString()}</div><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="addCart('${p.name.replace(/'/g,"")}','${p.price}','${p.image||''}')">Add</button></div></div>`).join('');}
+function filterCat(el,c){document.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');loadProducts(c);}
 
-function openCart(){updateCart();document.getElementById('cartModal').style.display='flex';}
-function openCheckout(){if(cart.length==0)return alert('Cart empty');closeAll();setTimeout(()=>{document.getElementById('checkoutModal').style.display='flex';},100);}
-function backToCart(){closeAll();setTimeout(()=>{openCart();},100);}
-function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none');}
-function updateCart(){
- const total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
- const count=cart.reduce((s,i)=>s+i.qty,0);
- document.getElementById('cartCount').innerText=count;
- document.getElementById('cartTotal').innerText='#'+total.toLocaleString();
- document.getElementById('checkoutTotal').innerText='#'+total.toLocaleString();
- document.getElementById('cartTotalItems').innerText=count;
- document.getElementById('cartWallet').innerText='#'+wallet;
- document.getElementById('walletBal').innerText='#'+wallet;
- document.getElementById('walletBal2').innerText='#'+wallet;
- const box=document.getElementById('cartItems');
- if(cart.length==0){box.innerHTML='<p style="text-align:center;color:#6a8a70;padding:20px">Cart empty</p>';return;}
- box.innerHTML=cart.map((c,i)=>`<div class="cart-item"><div style="flex:1"><b>${c.name}</b><br><span style="color:#C6A86F">#${c.price} x ${c.qty} = #${c.price*c.qty}</span></div><div style="display:flex;gap:4px;align-items:center"><button class="btn btn-dark" style="padding:4px 8px" onclick="editQty(${i},-1)">-</button><b>${c.qty}</b><button class="btn btn-dark" style="padding:4px 8px" onclick="editQty(${i},1)">+</button><button class="btn" style="background:#ff4444;color:#fff;padding:4px 8px" onclick="delItem(${i})">X</button></div></div>`).join('');
+function addCart(n,p,img){
+  const exist=cart.findIndex(c=>c.name===n);
+  if(exist>-1){cart[exist].qty++;}else{cart.push({name:n,price:+p,qty:1,image:img});}
+  updateCartUI();
+  openModal('cartModal');
 }
-function editQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();}
-function delItem(i){cart.splice(i,1);updateCart();}
-function addCart(n,p){const e=cart.findIndex(c=>c.name===n);if(e>-1){cart[e].qty++;}else{cart.push({name:n,price:+p,qty:1});}updateCart();openCart();}
-async function loadProducts(){const {data,error}=await supabase.from('products').select('*').order('created_at',{ascending:false}).limit(100);if(error){document.getElementById('productGrid').innerHTML='<p>Error: '+error.message+'</p>';return;}products=data||[];document.getElementById('productGrid').innerHTML=products.map(p=>`<div class="card"><div class="card-img">${p.image?`<img src="${p.image}">`:'No img'}</div><div class="card-body"><b style="font-size:12px">${p.name}</b><div class="price">#${Number(p.price).toLocaleString()}</div><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="addCart('${p.name.replace(/'/g,"")}','${p.price}')">Add to Cart</button></div></div>`).join('')||'<p>No products - Login as admin to add</p>';}
-function doSearch(v){document.getElementById('productGrid').innerHTML=products.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())).map(p=>`<div class="card"><div class="card-img">${p.image?`<img src="${p.image}">`:'No'}</div><div class="card-body"><b>${p.name}</b><div class="price">#${p.price}</div><button class="btn btn-gold" style="width:100%;margin-top:6px" onclick="addCart('${p.name.replace(/'/g,"")}','${p.price}')">Add</button></div></div>`).join('');}
-async function signup(){const {data,error}=await supabase.auth.signUp({email:email.value,password:password.value});if(error){authMsg.innerText=error.message;return;}authMsg.innerText='Created! #500';await supabase.from('wallets').insert({user_id:data.user.id,balance:500});wallet=500;updateCart();}
-async function login(){const {data,error}=await supabase.auth.signInWithPassword({email:email.value,password:password.value});if(error){authMsg.innerText=error.message;return;}user=data.user;authBtn.innerText=user.email.slice(0,8);closeAll();const {data:w}=await supabase.from('wallets').select('balance').eq('user_id',user.id).single();if(w){wallet=w.balance;updateCart();}if(user.email===ADMIN_EMAIL){if(confirm('Admin? Add product?')){document.getElementById('adminModal').style.display='flex';loadAdminFunds();}}}
-async function submitFunding(){if(!user)return alert('Login');const {error}=await supabase.from('fundings').insert({user_id:user.id,amount:+fundAmount.value,monnify_ref:fundRef.value,status:'pending'});if(error)alert(error.message);else{alert('Submitted');closeAll();}}
-async function addProduct(){if(!user||user.email!==ADMIN_EMAIL)return alert('Only admin');const {error}=await supabase.from('products').insert({name:pname.value,price:+pprice.value,category:pcat.value||'General',image:pimage.value});if(error)alert(error.message);else{alert('Added');loadProducts();closeAll();}}
-async function loadAdminFunds(){const {data}=await supabase.from('fundings').select('*').eq('status','pending');document.getElementById('adminFunds').innerHTML=(data||[]).map(f=>`<div style="border:1px solid #1a3d1f;padding:6px;margin:4px 0">User ${f.user_id.slice(0,6)} #${f.amount} <button class="btn btn-gold" onclick="approveFunding('${f.id}','${f.user_id}',${f.amount})">APPROVE</button></div>`).join('')||'No pending';}
-async function approveFunding(id,uid,amt){const {data:w}=await supabase.from('wallets').select('balance').eq('user_id',uid).single();const newBal=(w?.balance||0)+amt;await supabase.from('wallets').update({balance:newBal}).eq('user_id',uid);await supabase.from('fundings').update({status:'approved'}).eq('id',id);alert('Approved');loadAdminFunds();}
+function updateCartUI(){
+  cartCount.innerText=cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartTotalItems').innerText=cart.reduce((s,i)=>s+i.qty,0);
+  const total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  cartTotal.innerText='#'+total.toLocaleString();
+  checkoutTotal.innerText='#'+total.toLocaleString();
+  const t2=document.getElementById('checkoutTotal2'); if(t2) t2.innerText='#'+total.toLocaleString();
+  const cw=document.getElementById('cartWallet'); if(cw) cw.innerText='#'+wallet.toLocaleString();
+  const cw2=document.getElementById('checkoutWallet'); if(cw2) cw2.innerText='#'+wallet.toLocaleString();
+  if(cart.length==0){
+    cartItems.innerHTML='<div style="text-align:center;padding:30px;color:#6a8a70"><i class="ri-shopping-cart-line" style="font-size:48px"></i><p>Cart empty - Add products</p></div>';
+    return;
+  }
+  cartItems.innerHTML=cart.map((c,i)=>`
+    <div class="cart-item">
+      <div style="width:50px;height:50px;border-radius:10px;background:var(--card);overflow:hidden;display:flex;align-items:center;justify-content:center">${c.image?`<img src="${c.image}" style="width:100%;height:100%;object-fit:cover">`:`<i class="ri-image-line"></i>`}</div>
+      <div class="cart-item-info"><b style="font-size:12px">${c.name}</b><div style="font-size:11px;color:var(--gold)">#${c.price.toLocaleString()} x ${c.qty} = <b>#${(c.price*c.qty).toLocaleString()}</b></div></div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button class="qty-btn" onclick="editQty(${i},-1)">-</button>
+        <span style="font-size:12px;font-weight:800;min-width:18px;text-align:center">${c.qty}</span>
+        <button class="qty-btn" onclick="editQty(${i},1)">+</button>
+        <button class="btn-red" style="border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-left:4px" onclick="deleteItem(${i})"><i class="ri-delete-bin-2-fill"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+function editQty(idx,delta){cart[idx].qty+=delta;if(cart[idx].qty<=0){cart.splice(idx,1);}updateCartUI();}
+function deleteItem(idx){if(confirm('Delete '+cart[idx].name+'?')){cart.splice(idx,1);updateCartUI();}}
+function clearCart(){if(cart.length==0)return;if(confirm('Clear all cart?')){cart=[];updateCartUI();}}
+function goToCheckout(){if(cart.length==0)return alert('Cart empty - Add products first');closeModals();setTimeout(()=>{openModal('checkoutModal');},150);}
+function backToCart(){closeModals();setTimeout(()=>{openModal('cartModal');},150);}
+
+// FIXED MODAL LOGIC - WILL OPEN EVERY TIME + BACK BUTTON WORKS
+function openModal(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.display='flex';
+  document.body.style.overflow='hidden';
+  if(id=='walletModal')loadFunds();
+  if(id=='adminModal'){loadAdminFunds();loadAdminOrders();}
+  try{ if(location.hash!='#'+id) history.pushState({modal:id},'', '#'+id); }catch(e){}
+}
+function closeModals(){
+  document.querySelectorAll('.modal').forEach(m=>{m.style.display='none';});
+  document.body.style.overflow='';
+  const acc=document.getElementById('accountDetails');const form=document.getElementById('fundForm');const btn=document.getElementById('depositBtn');
+  if(acc)acc.style.display='none';if(form)form.style.display='none';if(btn)btn.innerHTML='TAP TO DEPOSIT - WALLET ONLY';
+  try{ if(location.hash.startsWith('#')) history.replaceState({},'', location.pathname); }catch(e){}
+}
+window.addEventListener('popstate',()=>{document.querySelectorAll('.modal').forEach(m=>{m.style.display='none';});document.body.style.overflow='';});
+
+function showDepositAccount(){document.getElementById('accountDetails').style.display='block';document.getElementById('fundForm').style.display='block';document.getElementById('depositBtn').innerHTML='Account Below 👇';}
+async function signup(){const {data,error}=await supabase.auth.signUp({email:email.value,password:password.value});if(error)authMsg.innerText=error.message;else{authMsg.innerText='Created! #500 bonus Africa';await supabase.from('wallets').insert({user_id:data.user.id,balance:500});wallet=500;updateUI();}}
+async function login(){const {data,error}=await supabase.auth.signInWithPassword({email:email.value,password:password.value});if(error)authMsg.innerText=error.message;else{user=data.user;authBtn.innerHTML=user.email.slice(0,8);checkAdmin();closeModals();const {data:w}=await supabase.from('wallets').select('balance').eq('user_id',user.id).single();if(w){wallet=w.balance;updateUI();}}}
+function checkAdmin(){const btn=document.getElementById('secretAdminBtn');if(user?.email===ADMIN_EMAIL)btn.style.display='block';else btn.style.display='none';}
+function updateUI(){walletBal.innerText='#'+wallet.toLocaleString();const b2=document.getElementById('walletBal2');if(b2)b2.innerText='#'+wallet.toLocaleString();updateCartUI();}
+async function submitFunding(){if(!user)return alert('Login first');if(!fundAmount.value||!fundRef.value)return alert('Enter amount/ref');const {error}=await supabase.from('fundings').insert({user_id:user.id,amount:+fundAmount.value,monnify_ref:fundRef.value,status:'pending'});if(error)alert(error.message);else{alert('Submitted Africa!');closeModals();loadFunds();}}
+async function loadFunds(){if(!user)return;const {data}=await supabase.from('fundings').select('*').eq('user_id',user.id).order('created_at',{ascending:false});fundsList.innerHTML=(data||[]).map(f=>`<div style="padding:5px;border-bottom:1px solid var(--border)">#${f.amount} - ${f.monnify_ref} - <b style="color:${f.status=='approved'?'lightgreen':'orange'}">${f.status}</b></div>`).join('')||'No fundings';}
 async function placeOrder(){
- const total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
- if(!user)return alert('Login first');if(cart.length==0)return alert('Empty');
- if(!cFullName.value||!cPhone.value||!cEmail.value||!deliveryAddr.value||!cCity.value||!cState.value||!cCountry.value)return alert('Fill all *');
- if(total>wallet)return alert('Low wallet #'+wallet);
- const waybill='GS-AFRICA-'+Math.floor(100000+Math.random()*900000);
- const addr=`${cFullName.value} | ${cPhone.value} | ${cEmail.value} | ${deliveryAddr.value}, ${cCity.value}, ${cState.value}, ${cCountry.value}`;
- const {error}=await supabase.from('orders').insert({user_id:user.id,products:cart,total,status:'Wallet Paid',waybill_number:waybill,delivery_address:addr});
- if(error)alert(error.message);else{wallet-=total;await supabase.from('wallets').update({balance:wallet}).eq('user_id',user.id);updateCart();cart=[];updateCart();alert('PAID! Waybill '+waybill+' New Bal #'+wallet);closeAll();}
+  const total=cart.reduce((s,i)=>s+(i.price*i.qty),0);
+  if(!user)return alert('Login first');
+  if(cart.length==0)return alert('Cart empty');
+  const fullName=document.getElementById('cFullName').value.trim();
+  const phone=document.getElementById('cPhone').value.trim();
+  const emailVal=document.getElementById('cEmail').value.trim();
+  const addr=document.getElementById('deliveryAddr').value.trim();
+  const city=document.getElementById('cCity').value.trim();
+  const state=document.getElementById('cState').value.trim();
+  const country=document.getElementById('cCountry').value;
+  if(!fullName||!phone||!emailVal||!addr||!city||!state||!country)return alert('❌ Fill ALL required fields * in Order Form');
+  if(total>wallet)return alert('❌ Low wallet! Fund PalmPay 9122857147 - Your wallet #'+wallet.toLocaleString()+' < Total #'+total.toLocaleString());
+  const waybill='GS-AFRICA-'+Math.floor(100000+Math.random()*900000);
+  const fullAddress=`${fullName} | ${phone} | ${emailVal} | ${addr}, ${city}, ${state}, ${country} | ZIP:${document.getElementById('cZip').value} | Note:${document.getElementById('cNote').value} | Pay:WALLET ONLY | Items:${cart.length} | Qty:${cart.reduce((s,i)=>s+i.qty,0)}`;
+  const {error}=await supabase.from('orders').insert({user_id:user.id,products:cart,total,status:'Order Confirmed - Wallet Paid',waybill_number:waybill,pickup_date:new Date().toISOString().split('T')[0],delivery_address:fullAddress});
+  if(error)alert(error.message);
+  else{
+    wallet-=total;await supabase.from('wallets').update({balance:wallet}).eq('user_id',user.id);updateUI();
+    cart=[];updateCartUI();
+    alert('✅ AFRICA ORDER PAID WITH WALLET!\nWaybill: '+waybill+'\nCustomer: '+fullName+'\nTo: '+city+', '+country+'\nTotal: #'+total.toLocaleString()+'\nNew Balance: #'+wallet.toLocaleString());
+    closeModals();
+  }
 }
-loadProducts();
-supabase.auth.getUser().then(({data})=>{if(data.user){user=data.user;authBtn.innerText=data.user.email.slice(0,8);supabase.from('wallets').select('balance').eq('user_id',user.id).single().then(({data})=>{if(data){wallet=data.balance;updateCart();}});}});
-document.querySelectorAll('.modal').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)closeAll();})});
+async function loadHistory(){if(!user)return;const {data}=await supabase.from('orders').select('*').eq('user_id',user.id).order('created_at',{ascending:false});historyList.innerHTML=(data||[]).map(o=>`<div style="border:1px solid var(--border);padding:10px;border-radius:12px;margin:5px 0"><b>Waybill: ${o.waybill_number||'Pending'}</b><br>#${o.total} - ${o.status}<br><span style="font-size:10px">${o.delivery_address||''}</span></div>`).join('')||'No orders';}
+async function addProduct(){if(user?.email!==ADMIN_EMAIL)return alert('Only admin');let imgUrl=document.getElementById('pimage').value;const file=document.getElementById('pfile').files[0];if(file){const fileName=`${Date.now()}_${file.name}`;const {data,error}=await supabase.storage.from('products').upload(fileName,file);if(error)return alert('Create bucket products public - '+error.message);const {data:pub}=supabase.storage.from('products').getPublicUrl(fileName);imgUrl=pub.publicUrl;}if(!pname.value||!pprice.value)return alert('Enter name/price');const {error}=await supabase.from('products').insert({name:pname.value,price:+pprice.value,category:pcat.value,image:imgUrl,description:pdesc.value});if(error)alert(error.message);else{alert('Added!');localStorage.removeItem('gs_products_cache');loadProducts();}}
+async function loadAdminFunds(){const {data}=await supabase.from('fundings').select('*').eq('status','pending').order('created_at',{ascending:false});adminFunds.innerHTML=(data||[]).map(f=>`<div style="border:1px solid var(--border);padding:6px;border-radius:8px;margin:4px 0">User ${f.user_id.slice(0,8)} | #${f.amount} <button class="btn btn-gold" style="padding:3px 8px" onclick="approveFunding('${f.id}','${f.user_id}',${f.amount})">APPROVE</button></div>`).join('')||'No pending';}
+async function approveFunding(id,uid,amount){const {data:w}=await supabase.from('wallets').select('balance').eq('user_id',uid).single();const newBal=(w?.balance||0)+amount;await supabase.from('wallets').update({balance:newBal}).eq('user_id',uid);await supabase.from('fundings').update({status:'approved'}).eq('id',id);alert('Approved #'+amount);loadAdminFunds();}
+async function loadAdminOrders(){const {data}=await supabase.from('orders').select('*').order('created_at',{ascending:false}).limit(20);adminOrders.innerHTML=(data||[]).map(o=>`<div style="border:1px solid var(--border);padding:8px;border-radius:10px;margin:4px 0;cursor:pointer" onclick="selectOrder('${o.id}')"><b>${o.waybill_number||'No waybill'}</b> | #${o.total} | ${o.status}<br><span style="font-size:9px">${o.delivery_address?.slice(0,80)}...</span></div>`).join('');}
+function selectOrder(id){selectedOrderId=id;alert('Selected - Fill waybill+rider below');}
+async function updateTracking(){if(!selectedOrderId)return alert('Click order above');const updates={waybill_number:waybillInput.value,rider_name:riderName.value,rider_phone:riderPhone.value,pickup_date:pickupDate.value,status:trackingStatus.value};const {error}=await supabase.from('orders').update(updates).eq('id',selectedOrderId);if(error)alert(error.message);else{alert('Africa Tracking updated');loadAdminOrders();}}
+function askAssistant(){const q=chatInput.value.trim();if(!q)return;const box=document.getElementById('chatBox');box.innerHTML+=`<div style="padding:8px;background:var(--gold);color:#000;border-radius:10px;margin:5px 0;max-width:85%;margin-left:auto;font-size:12px">${chatInput.value}</div>`;box.innerHTML+=`<div style="padding:8px;background:var(--input);border:1px solid var(--border);border-radius:10px;margin:5px 0;font-size:12px">🛒 Smart cart active! Tap cart → see items with price/total → + / - to edit qty, delete button to remove → ORDER NOW button → fill form & pay wallet ✅</div>`;chatInput.value='';box.scrollTop=box.scrollHeight;}
+function logout(){supabase.auth.signOut();user=null;authBtn.innerHTML='Login';wallet=500;updateUI();document.getElementById('secretAdminBtn').style.display='none';}
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('splash').classList.add('hide');},2200);const savedTheme=localStorage.getItem('gs_theme');if(savedTheme){setTheme(savedTheme);}else{setTheme('greenBlackGold');}});
+initCats();loadProducts();
+supabase.auth.getUser().then(({data})=>{if(data.user){user=data.user;authBtn.innerHTML=data.user.email.slice(0,8);checkAdmin();supabase.from('wallets').select('balance').eq('user_id',user.id).single().then(({data})=>{if(data){wallet=data.balance;updateUI();}});}});
+document.querySelectorAll('.modal').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)closeModals();})});
 </script>
 </body>
 </html>
